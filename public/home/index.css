@@ -1,17 +1,17 @@
-body {
-  background-image: url("../images/tetrisBackground.png");
+#speechbubble {
+  display: flex;
+  background-color: white;
+  width: 500px;
+  height: 300px;
+  text-align: center;
 }
 
-footer {
-  bottom: 0;
-  position: absolute;
+#speechbubbleContainer {
+  display: flex;
+  justify-content: center;
 }
 
-#thingy {
-  background-color: black;
-}
-
-#discordInv{
-    width: 32px;
-    height: 32px;
+#discordInv {
+  width: 32px;
+  height: 32px;
 }
