@@ -1,0 +1,17 @@
+body {
+  background-image: url("../images/tetrisBackground.png");
+}
+
+footer {
+  bottom: 0;
+  position: absolute;
+}
+
+#thingy {
+  background-color: black;
+}
+
+#discordInv{
+    width: 32px;
+    height: 32px;
+}
