@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"sync"
 	"time"
@@ -9,7 +10,8 @@ import (
 )
 
 type ActionMessage struct {
-	Move string
+	Misc string
+	Key  string
 }
 
 type Client struct {
@@ -19,14 +21,65 @@ type Client struct {
 }
 
 func (C *Client) sendBoard() {
+	if C.Connection == nil {
+		return
+	}
 	C.Connection.WriteJSON(C.Board)
 }
 
-func (C *Client) recieveAction() {
+func (C *Client) gameloop() {
 	for {
+		if C.Connection == nil {
+			return
+		}
+
 		time.Sleep(1 * time.Second)
+		C.Board.Lock()
 		C.Board.tick()
 		C.sendBoard()
+		C.Board.Unlock()
+	}
+}
+func (C *Client) communicationLoop() {
+	for {
+		_, reader, err := C.Connection.NextReader()
+
+		if err != nil {
+			C.Connection.Close()
+			C.Connection = nil
+			return
+		}
+
+		p := make([]byte, 10000)
+		n, _ := reader.Read(p)
+		var action ActionMessage
+		json.Unmarshal(p[:n], &action)
+
+		if C.Board.fallingPiece == nil {
+			continue
+		}
+
+		switch action.Key {
+		case "KeyD":
+			C.Board.move(1)
+			C.Board.drawFalling(C.Board.fallingPiece.PositionX-1, C.Board.fallingPiece.PositionY, make([][]int, 0))
+			C.sendBoard()
+			break
+		case "KeyA":
+			C.Board.move(0)
+			C.Board.drawFalling(C.Board.fallingPiece.PositionX+1, C.Board.fallingPiece.PositionY, make([][]int, 0))
+			C.sendBoard()
+			break
+		case "KeyZ":
+			preX := C.Board.fallingPiece.PositionX
+			preY := C.Board.fallingPiece.PositionY
+			preGrid := C.Board.fallingPiece.Grid
+			C.Board.flip(0)
+			C.Board.drawFalling(preX, preY, preGrid)
+			C.sendBoard()
+			break
+		}
+
 	}
 }
 
@@ -54,7 +107,7 @@ func routeRoomConnections(c *websocket.Conn) {
 
 	client := Client{
 		Board: &Board{
-			Grid: initiateGrid(),
+			Grid: initiateGrid(20, 10),
 		},
 		Connection: c,
 	}
@@ -72,5 +125,7 @@ func routeRoomConnections(c *websocket.Conn) {
 
 	client.sendBoard()
 
-	go client.recieveAction()
+	go client.communicationLoop()
+	go client.gameloop()
+
 }

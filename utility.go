@@ -27,10 +27,10 @@ func generateRoomName() string {
 	return output.String()
 }
 
-func initiateGrid() [][]int {
-	a := make([][]int, 20)
+func initiateGrid(y,x int) [][]int {
+	a := make([][]int, y)
 	for i := range a {
-		a[i] = make([]int, 10)
+		a[i] = make([]int, x)
 	}
 	return a
 }

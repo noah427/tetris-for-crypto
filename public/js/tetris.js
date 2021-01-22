@@ -4,6 +4,14 @@ const ctx = canvas.getContext("2d");
 
 ws = new WebSocket(`ws://${window.location.toString().substr(7)}/ws`);
 
+var images = [];
+
+for (let i = 0; i < 8; i++) {
+  let img = document.createElement("img");
+  img.src = `../../images/pieces/tetriscube${i}.png`;
+  images.push(img);
+}
+
 ws.onopen = function (e) {
   console.log(e);
 };
@@ -30,16 +38,16 @@ ws.onmessage = function (e) {
       return;
     }
 
-    console.log(y / 40, x / 40);
-
-    switch (grid[y / 40][x / 40]) {
-      case 0:
-        ctx.fillStyle = "#FFFFFF";
-        break;
-      default:
-        ctx.fillStyle = "#000000";
-        break;
-    }
-    ctx.fillRect(x, y, 40, 40);
+    ctx.drawImage(images[grid[y / 40][x / 40]], x, y);
   }
 };
+
+window.addEventListener("keypress", function (e) {
+  console.log(e.code);
+  var response = {
+    Misc: "",
+    Key: e.code,
+  };
+
+  ws.send(JSON.stringify(response));
+});
