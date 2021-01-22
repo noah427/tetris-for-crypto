@@ -78,6 +78,19 @@ func (C *Client) communicationLoop() {
 			C.Board.drawFalling(preX, preY, preGrid)
 			C.sendBoard()
 			break
+		case "KeyX":
+			preX := C.Board.fallingPiece.PositionX
+			preY := C.Board.fallingPiece.PositionY
+			preGrid := C.Board.fallingPiece.Grid
+			C.Board.flip(1)
+			C.Board.drawFalling(preX, preY, preGrid)
+			C.sendBoard()
+			break
+		case "KeyS":
+			C.Board.drop()
+			C.Board.drawFalling(-1, -1, [][]int{})
+			C.sendBoard()
+			break
 		}
 
 	}
