@@ -23,6 +23,6 @@ func createRoom(c *fiber.Ctx) error {
 func joinRoom(c *fiber.Ctx) error {
 	room := roomManager.Rooms[c.Params("room")]
 	fmt.Println(room)
-	c.SendFile("./public/tetris/index.html")
+	c.SendFile("./public/html/tetris.html")
 	return nil
 }
