@@ -21,7 +21,7 @@ func main() {
 		DisableStartupMessage: true,
 	})
 
-	app.Static("/", "./public/home")
+	app.Static("/", "./public/html")
 	app.Static("/images", "./public/images")
 	app.Static("/js", "./public/js")
 	app.Static("/css", "./public/css")
