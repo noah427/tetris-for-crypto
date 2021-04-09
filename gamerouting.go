@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber"
-	"github.com/gofiber/websocket"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/websocket/v2"
 )
 
 func createRoom(c *fiber.Ctx) error {
@@ -12,8 +12,8 @@ func createRoom(c *fiber.Ctx) error {
 
 	name := generateRoomName()
 	room := Room{
-		Name: name,
-		Clients :make(map[*websocket.Conn]Client),
+		Name:    name,
+		Clients: make(map[*websocket.Conn]Client),
 	}
 	roomManager.Rooms[name] = room
 	c.Redirect(fmt.Sprintf("../rooms/%s", name))

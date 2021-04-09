@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gofiber/websocket"
+	"github.com/gofiber/websocket/v2"
 )
 
 type ActionMessage struct {
